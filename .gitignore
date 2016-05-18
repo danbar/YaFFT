@@ -1,3 +1,18 @@
+# Eclipse
+.project
+.pydevproject
+
+# Octave
+octave-workspace
+
+# Python
+*.pyc
+
+# Waf library
+.lock-waf*
+.waf*
+build/
+
 # Compiled Object files
 *.slo
 *.lo
