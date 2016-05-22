@@ -1,6 +1,8 @@
 # Eclipse
+.cproject
 .project
 .pydevproject
+.settings/
 
 # Octave
 octave-workspace
