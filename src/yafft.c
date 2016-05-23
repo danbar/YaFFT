@@ -8,6 +8,6 @@
 /**
  *
  */
-void fft(float complex *data, const unsigned long N) {
-	data[0] = 1;
+void fft(complex float* data, int n) {
+	data[0] = 2 + 3*I;
 }

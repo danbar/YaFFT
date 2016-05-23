@@ -10,9 +10,8 @@ out = 'build'
 def options(opt):
     opt.add_option('--foo', action='store', default=False, help='Silly test')
 
-    opt.load('compiler_c')
+    opt.load('compiler_c')   
     opt.load('python')
-    opt.load('swig')
 
 def configure(conf):
     print('Configuring YaFFT in ' + conf.path.abspath())

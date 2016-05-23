@@ -1,20 +1,28 @@
 %module yafft
 
-// SWIG Libraries
-%include <carrays.i>
-%include <complex.i>
-
-%array_functions(float complex, data)
-
+//
+// C declarations
+//
 %{
-    // Declarations
+    #define SWIG_FILE_WITH_INIT
     #include <complex.h>
-    #include <stdint.h>
+    #include "src/yafft.h"
 %}
 
+//
+// SWIG directives
+//
+%include <complex.i>
+%include "numpy.i"
 
-
-%inline %{
-    extern void fft(float complex *data, const unsigned long N);
+%init %{
+    import_array();
 %}
+
+%numpy_typemaps(complex float, NPY_CFLOAT, int)
+%numpy_typemaps(complex double, NPY_CDOUBLE, int)
+
+%apply (complex float* INPLACE_ARRAY1, int DIM1) {(complex float* data, int n)};
+
+%include "src/yafft.h"
 

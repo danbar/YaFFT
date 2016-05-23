@@ -7,8 +7,7 @@
 #define YAFFT_H_
 
 #include <complex.h>
-#include <stdint.h>
 
-void fft(float complex *data, const unsigned long N);
+void fft(complex float* data, int n);
 
 #endif /* YAFFT_H_ */
