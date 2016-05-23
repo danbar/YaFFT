@@ -1,4 +1,5 @@
 import sys
+import os
 import unittest
 
 import numpy as np
@@ -6,9 +7,8 @@ import numpy.testing as npt
 
 from oct2py import octave
 
-
-sys.path.append('build')
-sys.path.append('build/swig')
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'build'))
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'build', 'swig'))
 
 import yafft
 
@@ -38,10 +38,15 @@ class Test2PointFFT(unittest.TestCase):
         npt.assert_almost_equal(test_res, test_out)
 
     def test_2point_fft(self):
-        data = yafft.new_data(1)
-        yafft.fft(data, 1)
-        print(yafft.data_getitem(data, 0))
-        yafft.delete_data(data)
+        data = np.array([1, 0], dtype=np.complex64)
+        #
+        yafft.fft(data)
+        print(data)
+        #
+        #data = yafft.new_data(1)
+        #yafft.fft(data, 1)
+        #print(yafft.data_getitem(data, 0))
+        #yafft.delete_data(data)
 
 
 class Test4PointFFT(unittest.TestCase):

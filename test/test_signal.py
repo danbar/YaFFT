@@ -1,9 +1,16 @@
+import sys
+import os
 import unittest
 
 import numpy as np
 import numpy.testing as npt
 
 from oct2py import octave
+
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'build'))
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'build', 'swig'))
+
+import yafft
 
 
 class TestSine(unittest.TestCase):

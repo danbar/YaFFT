@@ -2,7 +2,6 @@
 Yet another FFT - A lightweight C library for the Fast Fourier Transform.
 
 ...
-C99
 
 ## Usage
 ...
@@ -15,7 +14,6 @@ C99
 * NumPy
 * Octave (+ Signal Processing Package)
 * Oct2Py
-
 
 ## Other FFT Libraries
 * KISS FFT
