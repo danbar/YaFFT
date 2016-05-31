@@ -22,7 +22,7 @@
 %numpy_typemaps(complex float, NPY_CFLOAT, int)
 %numpy_typemaps(complex double, NPY_CDOUBLE, int)
 
-%apply (complex float* INPLACE_ARRAY1, int DIM1) {(complex float* data, int n)};
+%apply (complex float* INPLACE_ARRAY1, int DIM1) {(complex float* data, unsigned int n)};
 
 %include "src/yafft.h"
 

@@ -31,8 +31,8 @@ def build(bld):
     bld.shlib(features='pyext',
               source='src/yafft.c swig/yafft.i',
               target='_yafft',
-              cflags='-std=c99',
-              swig_flags='-python -Wall',
+              cflags=['-g', '-O0', '-Wall', '-std=c99'],
+              swig_flags='-python -Wall -debug-classes',
               includes='. src')
 
 def test(ctx):

@@ -8,6 +8,6 @@
 
 #include <complex.h>
 
-void fft(complex float* data, const int n);
+void fft(complex float* data, const unsigned int n);
 
 #endif /* YAFFT_H_ */
