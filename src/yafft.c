@@ -1,5 +1,6 @@
-/*
- * yafft.c
+/* yafft.c
+ *
+ * Yet another FFT - A lightweight C library for the Fast Fourier Transform.
  *
  */
 
