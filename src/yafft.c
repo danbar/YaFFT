@@ -33,7 +33,7 @@ static unsigned int reverse_bits(unsigned int v, const unsigned int num_bits) {
 
 
 /*
- *
+ * Swap two complex numbers
  */
 static inline void swap(complex float* a, complex float* b) {
 	complex float c = *a;
@@ -43,7 +43,7 @@ static inline void swap(complex float* a, complex float* b) {
 
 
 /*
- *
+ * Twiddle factor
  */
 static complex float twiddle_factor(const unsigned int k, const unsigned int stage, const unsigned int n) {
 	complex float W = cexpf(-I*2*PI*k/(1 << stage));
@@ -52,7 +52,7 @@ static complex float twiddle_factor(const unsigned int k, const unsigned int sta
 
 
 /*
- *
+ * Butterfly
  */
 static void butterfly(complex float* x, complex float* y, const radix_type radix) {
 	switch (radix) {
@@ -67,7 +67,7 @@ static void butterfly(complex float* x, complex float* y, const radix_type radix
 
 
 /*
- *
+ * Fast Fourier Transform
  */
 void fft(complex float* data, const unsigned int n) {
 	// Initialize variables
