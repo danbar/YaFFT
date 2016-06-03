@@ -22,23 +22,25 @@ def options(opt):
 def configure(conf):
     print('Configuring YaFFT in ' + conf.path.abspath())
 
-# TODO:
-#    conf.check_python_version((2, 4, 2))
-#    if conf.check_swig_version() < (1, 2, 27):
-#        conf.fatal('this swig version is too old')
-
     # Debug variant
     conf.setenv('debug')
+
     conf.load('compiler_c')
     conf.load('python')
     conf.load('swig')
-    conf.check_python_headers()
     conf.env.CFLAGS = ['-g', '-O0', '-Wall', '-std=c99']
+    conf.check_python_headers()
+    conf.check_python_version((2, 5, 0))
+    if conf.check_swig_version() < (3, 0, 0):
+        conf.fatal('Swig version must be >= 3.0.0')
+
     conf.write_config_header('debug/config.h', remove=False)
 
     # Release variant
     conf.setenv('release', env=conf.env.derive())  # start with a copy
+
     conf.env.CFLAGS = ['-O2', '-Wall', '-std=c99']
+
     conf.write_config_header('release/config.h')
 
 
