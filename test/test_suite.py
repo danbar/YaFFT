@@ -11,7 +11,10 @@ def suite():
     suite.addTest(unittest.makeSuite(test_impulse.Test4PointFFT))
     suite.addTest(unittest.makeSuite(test_impulse.Test8PointFFT))
     # Signal
-    suite.addTest(unittest.makeSuite(test_signal.TestSine))
+    suite.addTest(unittest.makeSuite(test_signal.Test16SamplesSine))
+    suite.addTest(unittest.makeSuite(test_signal.Test32SamplesSine))
+    suite.addTest(unittest.makeSuite(test_signal.Test64SamplesSine))
+    suite.addTest(unittest.makeSuite(test_signal.Test128SamplesSine))
     return suite
 
 mySuite = suite()

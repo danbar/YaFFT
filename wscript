@@ -9,7 +9,11 @@ out = 'build'
 
 
 def options(opt):
-    opt.add_option('--foo', action='store', default=False, help='Silly test')
+    opt.add_option('--variant',
+                   action='store',
+                   choices=['debug', 'release'],
+                   default='debug',
+                   help='build variant (debug/release) [default: debug]')
 
     opt.load('compiler_c')
     opt.load('python')
@@ -18,25 +22,48 @@ def options(opt):
 def configure(conf):
     print('Configuring YaFFT in ' + conf.path.abspath())
 
+# TODO:
+#    conf.check_python_version((2, 4, 2))
+#    if conf.check_swig_version() < (1, 2, 27):
+#        conf.fatal('this swig version is too old')
+
+    # Debug variant
+    conf.setenv('debug')
     conf.load('compiler_c')
     conf.load('python')
     conf.load('swig')
-
-    conf.check_python_version((2, 4, 2))  # TODO
     conf.check_python_headers()
-    if conf.check_swig_version() < (1, 2, 27):  # TODO
-        conf.fatal('this swig version is too old')
+    conf.env.CFLAGS = ['-g', '-O0', '-Wall', '-std=c99']
+    conf.write_config_header('debug/config.h', remove=False)
+
+    # Release variant
+    conf.setenv('release', env=conf.env.derive())  # start with a copy
+    conf.env.CFLAGS = ['-O2', '-Wall', '-std=c99']
+    conf.write_config_header('release/config.h')
 
 
 def build(bld):
-    print('Building YaFFT in ' + bld.path.abspath())
+    if not bld.variant:
+        bld.fatal('Build variant not specified')
+    print('Build variant: ' + bld.variant)
 
     bld.shlib(features='pyext',
               source='src/yafft.c swig/yafft.i',
               target='_yafft',
-              cflags=['-g', '-O0', '-Wall', '-std=c99'],
-              swig_flags='-python -Wall -debug-classes',
+              swig_flags='-python -Wall',
               includes='. src')
+
+
+def init(ctx):
+    from waflib.Options import options
+    from waflib.Build import BuildContext, CleanContext, InstallContext, UninstallContext
+    from waflib.Configure import ConfigurationContext
+    for y in (BuildContext, CleanContext, InstallContext, UninstallContext, ConfigurationContext):
+        name = y.__name__.replace('Context', '').lower()
+
+        class tmp(y):
+            cmd = name
+            variant = options.variant
 
 
 def test(ctx):

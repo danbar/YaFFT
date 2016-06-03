@@ -7,8 +7,8 @@ import numpy.testing as npt
 
 from oct2py import octave
 
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'build'))
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'build', 'swig'))
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'build', 'debug'))
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'build', 'debug', 'swig'))
 
 import yafft
 
