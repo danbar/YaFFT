@@ -66,7 +66,7 @@ static void butterfly(complex float* x, complex float* y, const radix_type radix
 
 
 /*
- * Decimation-in-Time Fast Fourier Transform
+ * Decimation-in-Time (DIT) Fast Fourier Transform (FFT)
  */
 void fft_dit(complex float* data, const unsigned int size) {
     // Variables
@@ -81,19 +81,23 @@ void fft_dit(complex float* data, const unsigned int size) {
         }
     }
 
-    // Danielson-Lanczos Lemma
+    // FFT Stages
     for (unsigned int m = 1; m <= stages; m++) {
         unsigned int point_size = 1 << m;
+        unsigned int sep = point_size >> 1;
 
+        // N-point FFTs
         for (unsigned int offset = 0; offset < size; offset += point_size) {
-            for (unsigned int k = 0; k < (point_size >> 1); k++) {
+            // Butterflies
+            for (unsigned int k = 0; k < sep; k++) {
                 // Twiddle factor
                 complex float W = twiddle_factor(k, m, point_size);
 
-                // Butterfly
+                // Indices
                 i = offset + k;
-                j = i + (point_size >> 1);
+                j = i + sep;
 
+                // Butterfly
                 data[j] *= W;
                 butterfly(&data[i], &data[j], RADIX_2);
             }
@@ -103,7 +107,7 @@ void fft_dit(complex float* data, const unsigned int size) {
 
 
 /**
- * Fast Fourier Transform
+ * Fast Fourier Transform (FFT)
  */
 void fft(complex float* data, const unsigned int size) {
     fft_dit(data, size);
