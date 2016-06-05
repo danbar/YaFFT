@@ -69,11 +69,11 @@ static void butterfly(complex float* x, complex float* y, const radix_type radix
  * Decimation-in-Time (DIT) Fast Fourier Transform (FFT)
  */
 void fft_dit(complex float* data, const unsigned int size) {
-    // Variables
+    // Initialization
     const unsigned int stages = log2(size);
-    unsigned int i, j;
 
     // Bit reversal
+    unsigned int i, j;
     for (i = 0; i < size; i++) {
         j = reverse_bits(i, stages);
         if (i < j) {
@@ -88,7 +88,6 @@ void fft_dit(complex float* data, const unsigned int size) {
 
         // N-point FFTs
         for (unsigned int offset = 0; offset < size; offset += point_size) {
-            // Butterflies
             for (unsigned int k = 0; k < sep; k++) {
                 // Twiddle factor
                 complex float W = twiddle_factor(k, m, point_size);
