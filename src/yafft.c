@@ -9,7 +9,6 @@
 #include "yafft.h"
 
 #define PI 3.14159265358979323846
-typedef enum radix_type {RADIX_2} radix_type;
 
 
 /*
@@ -67,36 +66,45 @@ static void butterfly(complex float* x, complex float* y, const radix_type radix
 
 
 /*
- * Fast Fourier Transform
+ * Decimation-in-Time Fast Fourier Transform
  */
-void fft(complex float* data, const unsigned int n) {
-    // Initialize variables
-    const unsigned int num_stages = log2(n);
+void fft_dit(complex float* data, const unsigned int size) {
+    // Variables
+    const unsigned int stages = log2(size);
+    unsigned int i, j;
 
     // Bit reversal
-    for (unsigned int i = 0; i < n; i++) {
-        unsigned int j = reverse_bits(i, num_stages);
+    for (i = 0; i < size; i++) {
+        j = reverse_bits(i, stages);
         if (i < j) {
             swap(&data[i], &data[j]);
         }
     }
 
-    // Danielson-Lanczos lemma
-    for (unsigned int stage = 1; stage <= num_stages; stage++) {
-        unsigned int step_size = 1 << stage;
+    // Danielson-Lanczos Lemma
+    for (unsigned int m = 1; m <= stages; m++) {
+        unsigned int step_size = 1 << m;
 
-        for (unsigned int offset = 0; offset < n; offset += step_size) {
+        for (unsigned int offset = 0; offset < size; offset += step_size) {
             for (unsigned int k = 0; k < (step_size >> 1); k++) {
                 // Twiddle factor
-                complex float W = twiddle_factor(k, stage, n);
+                complex float W = twiddle_factor(k, m, size);
 
                 // Butterfly
-                int i = offset + k;
-                int j = i + (step_size >> 1);
+                i = offset + k;
+                j = i + (step_size >> 1);
 
                 data[j] *= W;
                 butterfly(&data[i], &data[j], RADIX_2);
             }
         }
     }
+}
+
+
+/**
+ * Fast Fourier Transform
+ */
+void fft(complex float* data, const unsigned int size) {
+    fft_dit(data, size);
 }

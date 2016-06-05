@@ -9,6 +9,9 @@
 
 #include <complex.h>
 
-void fft(complex float* data, const unsigned int n);
+typedef enum decimation_type {DECIMATION_IN_TIME, DECIMATION_IN_FREQUENCY} decimation_type;
+typedef enum radix_type {RADIX_2} radix_type;
+
+void fft(complex float* data, const unsigned int size);
 
 #endif /* YAFFT_H_ */
