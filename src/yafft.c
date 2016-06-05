@@ -81,7 +81,7 @@ static void butterfly(complex float* x, complex float* y, const radix_type radix
 /*
  * Decimation-in-Time (DIT) Fast Fourier Transform (FFT)
  */
-void fft_dit(complex float* data, const unsigned int size) {
+static void fft_dit(complex float* data, const unsigned int size) {
     // Initialization
     const unsigned int stages = log_2(size);
 
