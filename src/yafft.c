@@ -45,7 +45,7 @@ static inline void swap(complex float* a, complex float* b) {
  * Twiddle factor
  */
 static complex float twiddle_factor(const unsigned int k, const unsigned int stage, const unsigned int n) {
-    complex float W = cexpf(-I*2*PI*k/(1 << stage));
+    complex float W = cexpf(-I*2*PI*k/n);
     return W;
 }
 
@@ -83,16 +83,16 @@ void fft_dit(complex float* data, const unsigned int size) {
 
     // Danielson-Lanczos Lemma
     for (unsigned int m = 1; m <= stages; m++) {
-        unsigned int step_size = 1 << m;
+        unsigned int point_size = 1 << m;
 
-        for (unsigned int offset = 0; offset < size; offset += step_size) {
-            for (unsigned int k = 0; k < (step_size >> 1); k++) {
+        for (unsigned int offset = 0; offset < size; offset += point_size) {
+            for (unsigned int k = 0; k < (point_size >> 1); k++) {
                 // Twiddle factor
-                complex float W = twiddle_factor(k, m, size);
+                complex float W = twiddle_factor(k, m, point_size);
 
                 // Butterfly
                 i = offset + k;
-                j = i + (step_size >> 1);
+                j = i + (point_size >> 1);
 
                 data[j] *= W;
                 butterfly(&data[i], &data[j], RADIX_2);
