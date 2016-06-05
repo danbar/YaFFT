@@ -4,11 +4,24 @@
  *
  */
 
-#include <math.h>
-
 #include "yafft.h"
 
 #define PI 3.14159265358979323846
+
+
+/*
+ * Bit Twiddling Hacks
+ * https://graphics.stanford.edu/~seander/bithacks.html
+ *
+ */
+static unsigned int log_2(unsigned int v) {
+    unsigned int r = 0; // r will be log_2(v)
+
+    while (v >>= 1) {
+      r++;
+    }
+    return r;
+}
 
 
 /*
@@ -70,7 +83,7 @@ static void butterfly(complex float* x, complex float* y, const radix_type radix
  */
 void fft_dit(complex float* data, const unsigned int size) {
     // Initialization
-    const unsigned int stages = log2(size);
+    const unsigned int stages = log_2(size);
 
     // Bit reversal
     unsigned int i, j;
