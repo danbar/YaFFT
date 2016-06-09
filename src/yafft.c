@@ -81,10 +81,7 @@ static void butterfly(complex float* x, complex float* y, const radix_type radix
 /*
  * Decimation-in-Time (DIT) Fast Fourier Transform (FFT)
  */
-static void fft_dit(complex float* data, const unsigned int size) {
-    // Initialization
-    const unsigned int stages = log_2(size);
-
+static void fft_dit(complex float* data, const unsigned int size, const unsigned int stages) {
     // Bit reversal
     unsigned int i, j;
     for (i = 0; i < size; i++) {
@@ -95,7 +92,7 @@ static void fft_dit(complex float* data, const unsigned int size) {
     }
 
     // FFT Stages
-    for (unsigned int m = 1; m <= stages; m++) {
+    for (int m = 1; m <= stages; m++) {
         unsigned int point_size = 1 << m;
         unsigned int sep = point_size >> 1;
 
@@ -118,9 +115,55 @@ static void fft_dit(complex float* data, const unsigned int size) {
 }
 
 
+/*
+ * Decimation-in-Frequency (DIF) Fast Fourier Transform (FFT)
+ */
+static void fft_dif(complex float* data, const unsigned int size, const unsigned int stages) {
+    // FFT Stages
+    unsigned int i, j;
+    for (int m = stages; m >= 0; m--) {
+        unsigned int point_size = 1 << m;
+        unsigned int sep = point_size >> 1;
+
+        // N-point FFTs
+        for (unsigned int offset = 0; offset < size; offset += point_size) {
+            for (unsigned int k = 0; k < sep; k++) {
+                // Twiddle factor
+                complex float W = twiddle_factor(k, m, point_size);
+
+                // Indices
+                i = offset + k;
+                j = i + sep;
+
+                // Butterfly
+                butterfly(&data[i], &data[j], RADIX_2);
+                data[j] *= W;
+            }
+        }
+    }
+
+    // Bit reversal
+    for (i = 0; i < size; i++) {
+        j = reverse_bits(i, stages);
+        if (i < j) {
+            swap(&data[i], &data[j]);
+        }
+    }
+}
+
+
 /**
  * Fast Fourier Transform (FFT)
  */
-void fft(complex float* data, const unsigned int size) {
-    fft_dit(data, size);
+void fft(complex float* data, const unsigned int size, const decimation_type decimation) {
+    const unsigned int stages = log_2(size);
+
+    switch (decimation) {
+        case DECIMATION_IN_TIME:
+            fft_dit(data, size, stages);
+            break;
+        case DECIMATION_IN_FREQUENCY:
+            fft_dif(data, size, stages);
+            break;
+    }
 }
