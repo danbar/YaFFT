@@ -25,4 +25,3 @@
 %apply (complex float* INPLACE_ARRAY1, int DIM1) {(complex float* data, unsigned int size)};
 
 %include "src/yafft.h"
-

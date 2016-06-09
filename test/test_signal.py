@@ -45,9 +45,14 @@ class Test16SamplesSine(unittest.TestCase):
         res = np.squeeze(res)
         npt.assert_almost_equal(res, self.out1, decimal=6)
 
-    def test_sine(self):
+    def test_dit_sine(self):
         data = self.in1
-        yafft.fft(data)
+        yafft.fft(data, yafft.DECIMATION_IN_TIME)
+        npt.assert_almost_equal(data, self.out1, decimal=6)
+
+    def test_dif_sine(self):
+        data = self.in1
+        yafft.fft(data, yafft.DECIMATION_IN_FREQUENCY)
         npt.assert_almost_equal(data, self.out1, decimal=6)
 
 
@@ -72,9 +77,14 @@ class Test32SamplesSine(unittest.TestCase):
         res = np.squeeze(res)
         npt.assert_almost_equal(res, self.out1, decimal=6)
 
-    def test_sine(self):
+    def test_dit_sine(self):
         data = self.in1
-        yafft.fft(data)
+        yafft.fft(data, yafft.DECIMATION_IN_TIME)
+        npt.assert_almost_equal(data, self.out1, decimal=6)
+
+    def test_dif_sine(self):
+        data = self.in1
+        yafft.fft(data, yafft.DECIMATION_IN_FREQUENCY)
         npt.assert_almost_equal(data, self.out1, decimal=6)
 
 
@@ -99,9 +109,14 @@ class Test64SamplesSine(unittest.TestCase):
         res = np.squeeze(res)
         npt.assert_almost_equal(res, self.out1, decimal=5)
 
-    def test_sine(self):
+    def test_dit_sine(self):
         data = self.in1
-        yafft.fft(data)
+        yafft.fft(data, yafft.DECIMATION_IN_TIME)
+        npt.assert_almost_equal(data, self.out1, decimal=5)
+
+    def test_dif_sine(self):
+        data = self.in1
+        yafft.fft(data, yafft.DECIMATION_IN_FREQUENCY)
         npt.assert_almost_equal(data, self.out1, decimal=5)
 
 
@@ -126,9 +141,14 @@ class Test128SamplesSine(unittest.TestCase):
         res = np.squeeze(res)
         npt.assert_almost_equal(res, self.out1, decimal=5)
 
-    def test_sine(self):
+    def test_dit_sine(self):
         data = self.in1
-        yafft.fft(data)
+        yafft.fft(data, yafft.DECIMATION_IN_TIME)
+        npt.assert_almost_equal(data, self.out1, decimal=5)
+
+    def test_dif_sine(self):
+        data = self.in1
+        yafft.fft(data, yafft.DECIMATION_IN_FREQUENCY)
         npt.assert_almost_equal(data, self.out1, decimal=5)
 
 

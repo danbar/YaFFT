@@ -40,13 +40,22 @@ class Test2PointFFT(unittest.TestCase):
         res = np.squeeze(res)
         npt.assert_almost_equal(res, self.out2)
 
-    def test_2point_fft(self):
+    def test_dit_2point_fft(self):
         data = self.in1
-        yafft.fft(data)
+        yafft.fft(data, yafft.DECIMATION_IN_TIME)
         npt.assert_almost_equal(data, self.out1)
 
         data = self.in2
-        yafft.fft(data)
+        yafft.fft(data, yafft.DECIMATION_IN_TIME)
+        npt.assert_almost_equal(data, self.out2)
+
+    def test_dif_2point_fft(self):
+        data = self.in1
+        yafft.fft(data, yafft.DECIMATION_IN_FREQUENCY)
+        npt.assert_almost_equal(data, self.out1)
+
+        data = self.in2
+        yafft.fft(data, yafft.DECIMATION_IN_FREQUENCY)
         npt.assert_almost_equal(data, self.out2)
 
 
@@ -91,21 +100,38 @@ class Test4PointFFT(unittest.TestCase):
         res = np.squeeze(res)
         npt.assert_almost_equal(res, self.out4)
 
-    def test_4point_fft(self):
+    def test_dit_4point_fft(self):
         data = self.in1
-        yafft.fft(data)
+        yafft.fft(data, yafft.DECIMATION_IN_TIME)
         npt.assert_almost_equal(data, self.out1)
 
         data = self.in2
-        yafft.fft(data)
+        yafft.fft(data, yafft.DECIMATION_IN_TIME)
         npt.assert_almost_equal(data, self.out2)
 
         data = self.in3
-        yafft.fft(data)
+        yafft.fft(data, yafft.DECIMATION_IN_TIME)
         npt.assert_almost_equal(data, self.out3)
 
         data = self.in4
-        yafft.fft(data)
+        yafft.fft(data, yafft.DECIMATION_IN_TIME)
+        npt.assert_almost_equal(data, self.out4)
+
+    def test_dif_4point_fft(self):
+        data = self.in1
+        yafft.fft(data, yafft.DECIMATION_IN_FREQUENCY)
+        npt.assert_almost_equal(data, self.out1)
+
+        data = self.in2
+        yafft.fft(data, yafft.DECIMATION_IN_FREQUENCY)
+        npt.assert_almost_equal(data, self.out2)
+
+        data = self.in3
+        yafft.fft(data, yafft.DECIMATION_IN_FREQUENCY)
+        npt.assert_almost_equal(data, self.out3)
+
+        data = self.in4
+        yafft.fft(data, yafft.DECIMATION_IN_FREQUENCY)
         npt.assert_almost_equal(data, self.out4)
 
 
@@ -180,37 +206,70 @@ class Test8PointFFT(unittest.TestCase):
         res = np.squeeze(res)
         npt.assert_almost_equal(res, self.out8)
 
-    def test_8point_fft(self):
+    def test_dit_8point_fft(self):
         data = self.in1
-        yafft.fft(data)
+        yafft.fft(data, yafft.DECIMATION_IN_TIME)
         npt.assert_almost_equal(data, self.out1)
 
         data = self.in2
-        yafft.fft(data)
+        yafft.fft(data, yafft.DECIMATION_IN_TIME)
         npt.assert_almost_equal(data, self.out2)
 
         data = self.in3
-        yafft.fft(data)
+        yafft.fft(data, yafft.DECIMATION_IN_TIME)
         npt.assert_almost_equal(data, self.out3)
 
         data = self.in4
-        yafft.fft(data)
+        yafft.fft(data, yafft.DECIMATION_IN_TIME)
         npt.assert_almost_equal(data, self.out4)
 
         data = self.in5
-        yafft.fft(data)
+        yafft.fft(data, yafft.DECIMATION_IN_TIME)
         npt.assert_almost_equal(data, self.out5)
 
         data = self.in6
-        yafft.fft(data)
+        yafft.fft(data, yafft.DECIMATION_IN_TIME)
         npt.assert_almost_equal(data, self.out6)
 
         data = self.in7
-        yafft.fft(data)
+        yafft.fft(data, yafft.DECIMATION_IN_TIME)
         npt.assert_almost_equal(data, self.out7)
 
         data = self.in8
-        yafft.fft(data)
+        yafft.fft(data, yafft.DECIMATION_IN_TIME)
+        npt.assert_almost_equal(data, self.out8)
+
+    def test_dif_8point_fft(self):
+        data = self.in1
+        yafft.fft(data, yafft.DECIMATION_IN_FREQUENCY)
+        npt.assert_almost_equal(data, self.out1)
+
+        data = self.in2
+        yafft.fft(data, yafft.DECIMATION_IN_FREQUENCY)
+        npt.assert_almost_equal(data, self.out2)
+
+        data = self.in3
+        yafft.fft(data, yafft.DECIMATION_IN_FREQUENCY)
+        npt.assert_almost_equal(data, self.out3)
+
+        data = self.in4
+        yafft.fft(data, yafft.DECIMATION_IN_FREQUENCY)
+        npt.assert_almost_equal(data, self.out4)
+
+        data = self.in5
+        yafft.fft(data, yafft.DECIMATION_IN_FREQUENCY)
+        npt.assert_almost_equal(data, self.out5)
+
+        data = self.in6
+        yafft.fft(data, yafft.DECIMATION_IN_FREQUENCY)
+        npt.assert_almost_equal(data, self.out6)
+
+        data = self.in7
+        yafft.fft(data, yafft.DECIMATION_IN_FREQUENCY)
+        npt.assert_almost_equal(data, self.out7)
+
+        data = self.in8
+        yafft.fft(data, yafft.DECIMATION_IN_FREQUENCY)
         npt.assert_almost_equal(data, self.out8)
 
 

@@ -18,6 +18,6 @@ typedef enum radix_type {
     RADIX_2
 } radix_type;
 
-void fft(complex float* data, const unsigned int size);
+void fft(complex float* data, const unsigned int size, const decimation_type decimation);
 
 #endif /* YAFFT_H_ */
