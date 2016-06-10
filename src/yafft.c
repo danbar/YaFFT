@@ -6,7 +6,7 @@
 
 #include "yafft.h"
 
-#define PI 3.14159265358979323846
+#define TWO_PI 6.2831853071795862
 
 
 /*
@@ -49,7 +49,7 @@ static unsigned int reverse_bits(unsigned int v, const unsigned int num_bits) {
  */
 void generate_twiddle_factors(complex float* data, const unsigned int size, const unsigned int n) {
     for (unsigned int k = 0; k < size; k++) {
-        data[k] = cexpf(-I*2*PI*k/n);
+        data[k] = cexpf(-I*TWO_PI*k/n);
     }
 }
 
