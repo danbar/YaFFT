@@ -17,20 +17,6 @@
 #define CMUL(x, y) ((complex_float) {(x).real*(y).real - (x).imag*(y).imag, \
                                      (x).real*(y).imag + (x).imag*(y).real})
 
-/*
- * Bit Twiddling Hacks
- * https://graphics.stanford.edu/~seander/bithacks.html
- *
- */
-static unsigned int log_2(unsigned int v) {
-    unsigned int r = 0; // r will be log_2(v)
-
-    while (v >>= 1) {
-      r++;
-    }
-    return r;
-}
-
 
 /*
  * Bit Twiddling Hacks
@@ -187,7 +173,7 @@ static void fft_dif(
  */
 void fft(complex_float* data, const unsigned int size, const decimation_type decimation) {
     // Number of Stages
-    const unsigned int stages = log_2(size);
+    const unsigned int stages = log2(size);
 
     // Twiddle factors
     complex_float twiddle_factor[size >> 1];
