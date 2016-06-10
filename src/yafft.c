@@ -41,7 +41,7 @@ static unsigned int reverse_bits(unsigned int v, const unsigned int num_bits) {
 /*
  * Generate twiddle factors
  */
-void generate_twiddle_factors(complex_float* data, const unsigned int size, const unsigned int n) {
+static void generate_twiddle_factors(complex_float* data, const unsigned int size, const unsigned int n) {
     for (unsigned int k = 0; k < size; k++) {
         data[k].real = cos(TWO_PI*k/n);
         data[k].imag = -sin(TWO_PI*k/n);
