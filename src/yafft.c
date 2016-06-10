@@ -4,10 +4,18 @@
  *
  */
 
+#include <math.h>
+
 #include "yafft.h"
 
 #define TWO_PI 6.2831853071795862
 
+#define CADD(x, y) ((complex_float) {(x).real + (y).real, \
+                                     (x).imag + (y).imag})
+#define CSUB(x, y) ((complex_float) {(x).real - (y).real, \
+                                     (x).imag - (y).imag})
+#define CMUL(x, y) ((complex_float) {(x).real*(y).real - (x).imag*(y).imag, \
+                                     (x).real*(y).imag + (x).imag*(y).real})
 
 /*
  * Bit Twiddling Hacks
@@ -47,9 +55,10 @@ static unsigned int reverse_bits(unsigned int v, const unsigned int num_bits) {
 /*
  * Generate twiddle factors
  */
-void generate_twiddle_factors(complex float* data, const unsigned int size, const unsigned int n) {
+void generate_twiddle_factors(complex_float* data, const unsigned int size, const unsigned int n) {
     for (unsigned int k = 0; k < size; k++) {
-        data[k] = cexpf(-I*TWO_PI*k/n);
+        data[k].real = cos(TWO_PI*k/n);
+        data[k].imag = -sin(TWO_PI*k/n);
     }
 }
 
@@ -57,8 +66,8 @@ void generate_twiddle_factors(complex float* data, const unsigned int size, cons
 /*
  * Swap two complex numbers
  */
-static inline void swap_complex_numbers(complex float* a, complex float* b) {
-    complex float c = *a;
+static inline void swap_complex_numbers(complex_float* a, complex_float* b) {
+    complex_float c = *a;
     *a = *b;
     *b = c;
 }
@@ -67,12 +76,12 @@ static inline void swap_complex_numbers(complex float* a, complex float* b) {
 /*
  * Butterfly
  */
-static void butterfly(complex float* x, complex float* y, const radix_type radix) {
+static void butterfly(complex_float* x, complex_float* y, const radix_type radix) {
     switch (radix) {
     case RADIX_2: {
-        complex float z = *x;
-        *x = z + *y;
-        *y = z - *y;
+        complex_float z = *x;
+        *x = CADD(z, *y);
+        *y = CSUB(z, *y);
         break;
     }
     }
@@ -83,10 +92,10 @@ static void butterfly(complex float* x, complex float* y, const radix_type radix
  * Decimation-in-Time (DIT) Fast Fourier Transform (FFT)
  */
 static void fft_dit(
-        complex float* data,
+        complex_float* data,
         const unsigned int size,
         const unsigned int stages,
-        const complex float* twiddle_factor
+        const complex_float* twiddle_factor
 ) {
     unsigned int i, j;
 
@@ -110,14 +119,14 @@ static void fft_dit(
         for (unsigned int offset = 0; offset < size; offset += sample_step_size) {
             for (unsigned int k = 0; k < separator; k++) {
                 // Twiddle factor
-                complex float W = twiddle_factor[k*twiddle_step_size];
+                complex_float W = twiddle_factor[k*twiddle_step_size];
 
                 // Indices
                 i = offset + k;
                 j = i + separator;
 
                 // Butterfly
-                data[j] *= W;
+                data[j] = CMUL(data[j], W);
                 butterfly(&data[i], &data[j], RADIX_2);
             }
         }
@@ -130,10 +139,10 @@ static void fft_dit(
  * Decimation-in-Frequency (DIF) Fast Fourier Transform (FFT)
  */
 static void fft_dif(
-        complex float* data,
+        complex_float* data,
         const unsigned int size,
         const unsigned int stages,
-        const complex float* twiddle_factor
+        const complex_float* twiddle_factor
 ) {
     unsigned int i, j;
 
@@ -149,7 +158,7 @@ static void fft_dif(
         for (unsigned int offset = 0; offset < size; offset += sample_step_size) {
             for (unsigned int k = 0; k < separator; k++) {
                 // Twiddle factor
-                complex float W = twiddle_factor[k*twiddle_step_size];
+                complex_float W = twiddle_factor[k*twiddle_step_size];
 
                 // Indices
                 i = offset + k;
@@ -157,7 +166,7 @@ static void fft_dif(
 
                 // Butterfly
                 butterfly(&data[i], &data[j], RADIX_2);
-                data[j] *= W;
+                data[j] = CMUL(data[j], W);
             }
         }
         twiddle_step_size <<= 1;
@@ -176,12 +185,12 @@ static void fft_dif(
 /**
  * Fast Fourier Transform (FFT)
  */
-void fft(complex float* data, const unsigned int size, const decimation_type decimation) {
+void fft(complex_float* data, const unsigned int size, const decimation_type decimation) {
     // Number of Stages
     const unsigned int stages = log_2(size);
 
     // Twiddle factors
-    complex float twiddle_factor[size >> 1];
+    complex_float twiddle_factor[size >> 1];
     generate_twiddle_factors(twiddle_factor, size >> 1, size);
 
     // FFT
