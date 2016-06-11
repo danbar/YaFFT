@@ -72,7 +72,7 @@ static void butterfly(complex_float* x, complex_float* y) {
 /*
  * Decimation-in-Time (DIT) Fast Fourier Transform (FFT)
  */
-static void fft_dit(
+static void fft_radix2_dit(
         complex_float* data,
         const unsigned int size,
         const unsigned int stages,
@@ -119,7 +119,7 @@ static void fft_dit(
 /*
  * Decimation-in-Frequency (DIF) Fast Fourier Transform (FFT)
  */
-static void fft_dif(
+static void fft_radix2_dif(
         complex_float* data,
         const unsigned int size,
         const unsigned int stages,
@@ -166,7 +166,7 @@ static void fft_dif(
 /**
  * Fast Fourier Transform (FFT)
  */
-void fft(complex_float* data, const unsigned int size, const decimation_type decimation) {
+void fft_radix2(complex_float* data, const unsigned int size, const decimation_type decimation) {
     // Number of Stages
     const unsigned int stages = log2(size);
 
@@ -177,10 +177,10 @@ void fft(complex_float* data, const unsigned int size, const decimation_type dec
     // FFT
     switch (decimation) {
         case DECIMATION_IN_TIME:
-            fft_dit(data, size, stages, twiddle_factor);
+            fft_radix2_dit(data, size, stages, twiddle_factor);
             break;
         case DECIMATION_IN_FREQUENCY:
-            fft_dif(data, size, stages, twiddle_factor);
+            fft_radix2_dif(data, size, stages, twiddle_factor);
             break;
     }
 }

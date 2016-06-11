@@ -49,8 +49,11 @@ def build(bld):
         bld.fatal('Build variant not specified')
     print('Build variant: ' + bld.variant)
 
+    source_files = [x for x in bld.path.ant_glob('**/*.c', excl=['build/'])]
+    source_files.append('swig/yafft.i')
+
     bld.shlib(features='pyext',
-              source='src/yafft.c swig/yafft.i',
+              source=source_files,
               target='_yafft',
               swig_flags='-python -Wall',
               includes='. src')
