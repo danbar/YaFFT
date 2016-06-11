@@ -62,15 +62,10 @@ static inline void swap_complex_numbers(complex_float* a, complex_float* b) {
 /*
  * Butterfly
  */
-static void butterfly(complex_float* x, complex_float* y, const radix_type radix) {
-    switch (radix) {
-    case RADIX_2: {
-        complex_float z = *x;
-        *x = CADD(z, *y);
-        *y = CSUB(z, *y);
-        break;
-    }
-    }
+static void butterfly(complex_float* x, complex_float* y) {
+    complex_float z = *x;
+    *x = CADD(z, *y);
+    *y = CSUB(z, *y);
 }
 
 
@@ -113,7 +108,7 @@ static void fft_dit(
 
                 // Butterfly
                 data[j] = CMUL(data[j], W);
-                butterfly(&data[i], &data[j], RADIX_2);
+                butterfly(&data[i], &data[j]);
             }
         }
         twiddle_step_size >>= 1;
@@ -151,7 +146,7 @@ static void fft_dif(
                 j = i + separator;
 
                 // Butterfly
-                butterfly(&data[i], &data[j], RADIX_2);
+                butterfly(&data[i], &data[j]);
                 data[j] = CMUL(data[j], W);
             }
         }
