@@ -230,4 +230,10 @@ void ifft_radix2(
             fft_radix2_dif(data, size, stages, twiddle_factor);
             break;
     }
+
+    // Scaling
+    for (unsigned int n = 0; n < size; n++) {
+        data[n].real /= size;
+        data[n].imag /= size;
+    }
 }

@@ -2,6 +2,7 @@ import unittest
 
 import test_impulse
 import test_signal
+import test_forward_backward
 
 
 def suite():
@@ -15,6 +16,10 @@ def suite():
     suite.addTest(unittest.makeSuite(test_signal.Test32SamplesSine))
     suite.addTest(unittest.makeSuite(test_signal.Test64SamplesSine))
     suite.addTest(unittest.makeSuite(test_signal.Test128SamplesSine))
+    # Forward-Backward Transformation
+    suite.addTest(unittest.makeSuite(test_forward_backward.Test2PointFFT))
+    suite.addTest(unittest.makeSuite(test_forward_backward.Test4PointFFT))
+    suite.addTest(unittest.makeSuite(test_forward_backward.Test8PointFFT))
     return suite
 
 mySuite = suite()
