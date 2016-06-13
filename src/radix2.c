@@ -23,7 +23,10 @@
  * https://graphics.stanford.edu/~seander/bithacks.html
  *
  */
-static unsigned int reverse_bits(unsigned int v, const unsigned int num_bits) {
+static unsigned int reverse_bits(
+        unsigned int v,
+        const unsigned int num_bits
+) {
     unsigned int r = v;   // r will be reversed bits of v
     int s = num_bits - 1; // extra shift needed at end
 
@@ -41,10 +44,17 @@ static unsigned int reverse_bits(unsigned int v, const unsigned int num_bits) {
 /*
  * Generate twiddle factors
  */
-static void generate_twiddle_factors(complex_float* data, const unsigned int size, const unsigned int n) {
+static void generate_twiddle_factors(
+        complex_float* data,
+        const unsigned int size,
+        const unsigned int n,
+        const int sign
+) {
+    double arg;
     for (unsigned int k = 0; k < size; k++) {
-        data[k].real = cos(TWO_PI*k/n);
-        data[k].imag = -sin(TWO_PI*k/n);
+        arg = TWO_PI*k/n;
+        data[k].real = cos(arg);
+        data[k].imag = sign*sin(arg);
     }
 }
 
@@ -52,7 +62,10 @@ static void generate_twiddle_factors(complex_float* data, const unsigned int siz
 /*
  * Swap two complex numbers
  */
-static inline void swap_complex_numbers(complex_float* a, complex_float* b) {
+static inline void swap_complex_numbers(
+        complex_float* a,
+        complex_float* b
+) {
     complex_float c = *a;
     *a = *b;
     *b = c;
@@ -62,7 +75,10 @@ static inline void swap_complex_numbers(complex_float* a, complex_float* b) {
 /*
  * Butterfly
  */
-static void butterfly(complex_float* x, complex_float* y) {
+static void butterfly(
+        complex_float* x,
+        complex_float* y
+) {
     complex_float z = *x;
     *x = CADD(z, *y);
     *y = CSUB(z, *y);
@@ -166,13 +182,44 @@ static void fft_radix2_dif(
 /**
  * Fast Fourier Transform (FFT)
  */
-void fft_radix2(complex_float* data, const unsigned int size, const decimation_type decimation) {
+void fft_radix2(
+        complex_float* data,
+        const unsigned int size,
+        const decimation_type decimation
+) {
     // Number of Stages
     const unsigned int stages = log2(size);
 
     // Twiddle factors
     complex_float twiddle_factor[size >> 1];
-    generate_twiddle_factors(twiddle_factor, size >> 1, size);
+    generate_twiddle_factors(twiddle_factor, size >> 1, size, -1);
+
+    // FFT
+    switch (decimation) {
+        case DECIMATION_IN_TIME:
+            fft_radix2_dit(data, size, stages, twiddle_factor);
+            break;
+        case DECIMATION_IN_FREQUENCY:
+            fft_radix2_dif(data, size, stages, twiddle_factor);
+            break;
+    }
+}
+
+
+/**
+ * Inverse Fast Fourier Transform (FFT)
+ */
+void ifft_radix2(
+        complex_float* data,
+        const unsigned int size,
+        const decimation_type decimation
+) {
+    // Number of Stages
+    const unsigned int stages = log2(size);
+
+    // Twiddle factors
+    complex_float twiddle_factor[size >> 1];
+    generate_twiddle_factors(twiddle_factor, size >> 1, size, +1);
 
     // FFT
     switch (decimation) {

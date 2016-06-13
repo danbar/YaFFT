@@ -18,5 +18,6 @@ typedef enum decimation_type {
 } decimation_type;
 
 void fft_radix2(complex_float* data, const unsigned int size, const decimation_type decimation);
+void ifft_radix2(complex_float* data, const unsigned int size, const decimation_type decimation);
 
 #endif /* YAFFT_H_ */
