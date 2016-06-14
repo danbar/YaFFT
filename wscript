@@ -1,6 +1,8 @@
 #! /usr/bin/env python
 # encoding: utf-8
 
+from waflib.Build import BuildContext
+
 APPNAME = 'YaFFT'
 VERSION = '0.1'
 
@@ -14,6 +16,12 @@ def options(opt):
                    choices=['debug', 'release'],
                    default='debug',
                    help='build variant (debug/release) [default: debug]')
+    opt.add_option('--test',
+                   action='store_true',
+                   help='build test')
+    opt.add_option('--example',
+                   action='store_true',
+                   help='build example')
 
     opt.load('compiler_c')
     opt.load('python')
@@ -22,6 +30,8 @@ def options(opt):
 def configure(conf):
     print('Configuring YaFFT in ' + conf.path.abspath())
 
+    conf.env.TEST = conf.options.test
+
     # Debug variant
     conf.setenv('debug')
 
@@ -29,6 +39,8 @@ def configure(conf):
     conf.load('python')
     conf.load('swig')
     conf.env.CFLAGS = ['-g', '-O0', '-Wall', '-std=c99']
+    conf.env.TEST = conf.options.test
+    conf.env.EXAMPLE = conf.options.example
     conf.check_python_headers()
     conf.check_python_version((2, 5, 0))
     if conf.check_swig_version() < (3, 0, 0):
@@ -49,14 +61,26 @@ def build(bld):
         bld.fatal('Build variant not specified')
     print('Build variant: ' + bld.variant)
 
-    source_files = [x for x in bld.path.ant_glob('**/*.c', excl=['build/'])]
-    source_files.append('swig/yafft.i')
+    source_files = [x for x in bld.path.ant_glob('src/**/*.c')]
 
-    bld.shlib(features='pyext',
-              source=source_files,
-              target='_yafft',
-              swig_flags='-python -Wall',
-              includes='. src')
+    # SWIG interface for Python
+    if bld.env.TEST:
+        source_files.append('swig/yafft.i')
+        bld.shlib(features='pyext',
+                  source=source_files,
+                  target='_yafft',
+                  swig_flags='-python -Wall',
+                  includes='. src')
+    # Shared library
+    else:
+        bld.shlib(source=source_files,
+                  target='yafft')
+        # Example program
+        if bld.env.EXAMPLE:
+            bld.program(source='example/simple_fft.c',
+                        target='example/simple_fft',
+                        use='yafft', 
+                        includes='src')
 
 
 def init(ctx):
@@ -72,5 +96,12 @@ def init(ctx):
 
 
 def test(ctx):
+    if not ctx.env.TEST:
+        ctx.fatal('Test flag not specified during configuration')
     from test import test_suite
     test_suite.run()
+
+
+class TestSubclass(BuildContext):
+        cmd = 'test'
+        fun = 'test'
