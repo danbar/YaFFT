@@ -18,10 +18,10 @@ def options(opt):
                    help='build variant (debug/release) [default: debug]')
     opt.add_option('--test',
                    action='store_true',
-                   help='build test')
+                   help='build tests')
     opt.add_option('--example',
                    action='store_true',
-                   help='build example')
+                   help='build examples')
 
     opt.load('compiler_c')
     opt.load('python')
@@ -63,24 +63,26 @@ def build(bld):
 
     source_files = [x for x in bld.path.ant_glob('src/**/*.c')]
 
-    # SWIG interface for Python
+    # Shared library
+    bld.shlib(source=source_files[:],
+              target='yafft',
+              includes='src')
+
+    # SWIG interface for tests
     if bld.env.TEST:
         source_files.append('swig/yafft.i')
         bld.shlib(features='pyext',
-                  source=source_files,
+                  source=source_files[:],
                   target='_yafft',
                   swig_flags='-python -Wall',
                   includes='. src')
-    # Shared library
-    else:
-        bld.shlib(source=source_files,
-                  target='yafft')
-        # Example program
-        if bld.env.EXAMPLE:
-            bld.program(source='example/simple_fft.c',
-                        target='example/simple_fft',
-                        use='yafft', 
-                        includes='src')
+
+    # Program for examples
+    if bld.env.EXAMPLE:
+        bld.program(source='example/sine.c',
+                    target='example/sine',
+                    use='yafft',
+                    includes='src')
 
 
 def init(ctx):
