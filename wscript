@@ -82,7 +82,8 @@ def build(bld):
         bld.program(source='example/sine.c',
                     target='example/sine',
                     use='yafft',
-                    includes='src')
+                    includes='src',
+                    lib='m')
 
 
 def init(ctx):
